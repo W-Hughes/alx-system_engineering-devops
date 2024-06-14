@@ -1,0 +1,2 @@
+#!/bin/bash
+ls -a1 | awk 'BEGIN {ORS=", "} /\/$/ {print "."} {print} END {print ""}' | sed 's/, $/\n/' | sort -f -k 1.1,1.1d -k 1.2,1 | tr '\n' ' ' | sed 's/,$/\n/'
