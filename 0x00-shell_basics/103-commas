@@ -1,2 +1,2 @@
 #!/bin/bash
-(echo .; echo ..; ls -pA1 | grep -vE '^\.$|^\.\.$' | LC_ALL=C sort -f | tr '\n' ',') | sed 's/,$/\n/'
+(echo ./; echo ../; ls -pA1 | grep -vE '^\./$|^\.\./$' | LC_ALL=C sort -f | tr '\n' ',' | sed 's/,$/\n/')
