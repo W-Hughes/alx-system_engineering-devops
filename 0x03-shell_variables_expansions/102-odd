@@ -1,0 +1,2 @@
+#!/bin/bash#!/bin/bash
+nl -ba | grep '^[0-9]*[13579][[:blank:]]'
