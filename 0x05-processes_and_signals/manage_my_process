@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#Runs the following processes:
+#	Appends `I am alive!` to the /tmp/my_process indefinitely
+#	sleeps for 2 seconds after each iteration.
+
+
+while true; do
+    echo "I am alive!" >> /tmp/my_process
+    sleep 2
+done
