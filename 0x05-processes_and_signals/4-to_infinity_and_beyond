@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #Displays `To infinity and beyond` indefinitely.
+trap "echo 'Terminated'; exit" SIGINT
+
 while true
 do
 	echo "To infinity and beyond"
