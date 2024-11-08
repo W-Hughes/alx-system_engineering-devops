@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#Displays listenting ports: - including TCP and UDP ports with PID/Program name
+
+if [ "$EUID" -ne 0 ]; then
+	echo "Please run as root (sudo)"
+	exit
+fi
+
+netstat -l --program
