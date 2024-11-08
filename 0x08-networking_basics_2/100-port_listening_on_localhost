@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Listens on port 98 on localhost and outputs any received data.
+
+sudo nc -l 127.0.0.1 98
