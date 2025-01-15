@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Script to install and configure Nginx on an Ubuntu server with a custom 404 page
+
+# Update and install Nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Allow Nginx HTTP traffic through the firewall
+ufw allow 'Nginx HTTP'
+
+# Create a custom HTML page for the 404 error
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+
+# Add Nginx configuration to serve the custom 404 page
+NGINX_CONFIG="
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    # Configure custom 404 error page
+    error_page 404 /404.html;
+    location = /404.html {
+        root /var/www/html;
+        internal;
+    }
+}
+"
+
+# Write the configuration to the default site file
+echo "$NGINX_CONFIG" | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+# Test Nginx configuration for syntax errors
+nginx -t
+
+# Restart Nginx to apply the changes
+service nginx restart
+
