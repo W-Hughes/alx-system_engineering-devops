@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Create a 4096 bits long RSA key pair to the file school
+ssh-keygen -t rsa -b 4096 -f school -N "betty"
