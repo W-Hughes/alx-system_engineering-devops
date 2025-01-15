@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Script to install and configure Nginx on an Ubuntu server
+# Requirements:
+# - Install Nginx
+# - Configure Nginx to listen on port 80
+# - Serve "Hello World!" at the root URL (/)
+# - Redirect requests from /redirect_me to another page with a 301 status code
+
+# Update and install Nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Allow Nginx HTTP traffic through the firewall
+ufw allow 'Nginx HTTP'
+
+# Create a custom HTML page at /var/www/html/index.html
+echo "Hello World!" | tee /var/www/html/index.html > /dev/null
+
+# Add the redirection rule in the Nginx configuration
+NGINX_CONFIG="
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    # Serve the root URL with the custom HTML page
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    # Redirect /redirect_me with a 301 status code
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}
+"
+
+# Write the configuration to the default site file
+echo "$NGINX_CONFIG" | tee /etc/nginx/sites-available/default > /dev/null
+
+# Test Nginx configuration for syntax errors
+nginx -t
+
+# Restart Nginx without using systemctl
+service nginx restart
+
+# Verify the setup
+if curl -sI localhost | grep -q "200 OK"; then
+    echo "Nginx is serving 'Hello World!' at the root URL (/)"
+else
+    echo "Failed to serve 'Hello World!' at the root URL (/)"
+fi
+
+if curl -sI localhost/redirect_me | grep -q "301 Moved Permanently"; then
+    echo "Redirection from /redirect_me is correctly configured."
+else
+    echo "Redirection from /redirect_me failed."
+fi
